@@ -168,10 +168,10 @@
         getDrugsList(){
           let _this = this;
           axios.post("http://localhost:8087/product/page",{
-              name_like:_this.drugsName,
-              type:_this.drugsType,
-              page:_this.currentPage,
-              size:_this.size
+            name_like:_this.drugsName,
+            type:_this.drugsType,
+            page:_this.currentPage,
+            size:_this.size
           }).then(function (res) {
             const resData = res.data;
             console.log(resData);

@@ -86,7 +86,7 @@
           </template>
           <el-menu-item-group>
             <el-menu-item index="/record/addRecord">新增就诊</el-menu-item>
-            <el-menu-item index="3-2">就诊记录</el-menu-item>
+            <el-menu-item index="/record/recordList">就诊记录</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
         <el-menu-item index="/pneumonia/pneumonia">
@@ -97,12 +97,16 @@
           <i class="el-icon-goods"></i>
           <span slot="title">进货管理</span>
         </el-menu-item>
+        <el-menu-item index="/user/userList">
+          <i class="el-icon-news"></i>
+          <span slot="title">用户管理</span>
+        </el-menu-item>
       </el-menu>
         </el-row>
       </el-aside>
       <el-main class = main>
-        <el-row :span="6"><span v-if="trueAndFalse" class="el-dropdown-link userinfo-inner font2">{{userName}}</span></el-row>
-        <information ref="information" :visible.sync="informationCheck"></information>
+        <!--<el-row :span="6"><span v-if="trueAndFalse" class="el-dropdown-link userinfo-inner font2">{{userName}}</span></el-row>-->
+        <!--<information ref="information" :visible.sync="informationCheck"></information>-->
         <transition name="fade" mode="out-in">
           <router-view></router-view>
         </transition>
@@ -129,20 +133,13 @@
         }
       },
       created:function() {
-        if (this.isCollapse){
-          this.zhakai=true;
-          this.shouqi=false;
-        } else{
-          this.zhakai=false;
-          this.shouqi=true;
-        }
       },
       mounted:function(){
         var aa= document.getElementById('showInfo');
         aa.style.display="none";
       },
       methods:{
-        changmenu(){
+        changmenu(){//菜单栏的展开和折叠
           if(a==1) {
             this.isCollapse = true
             a = 0;

@@ -13,6 +13,8 @@ import addME from "../pages/medicalEquipment/addME";
 import addRecord from "../pages/record/addRecord";
 import sellList from "../pages/tockPurchase/sellList";
 import queryME from "../pages/medicalEquipment/queryME";
+import userList from "../pages/user/userList";
+import recordList from "../pages/record/recordList";
 Vue.use(Router)
 let router = new Router({
   routes: [
@@ -45,8 +47,9 @@ let router = new Router({
         {path: '/medicalEquipment/queryME',   component: queryME},
 
         {path: '/record/addRecord',   component: addRecord},
-
+        {path: '/record/recordList',   component: recordList},
         {path: '/pneumonia/pneumonia',   component: pneumonia},
+        {path: '/user/userList',   component: userList},
       ]
     }]
 })

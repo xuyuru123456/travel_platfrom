@@ -10,7 +10,7 @@
     </div>
     <hr>
     <div style="text-align: left;padding: 10px 20px">
-      <el-button type="primary"@click="addSellList = true">进货</el-button>
+      <!--<el-button type="primary"@click="addSellList = true">进货</el-button>-->
     </div>
     <div algin="center">
       <el-table :data="list"  border style="width: 100%" class="table":header-cell-style="{'text-align':'center'}">
@@ -57,47 +57,47 @@
         </el-pagination>
       </div>
     </div>
-    <!-- 新增弹出框 -->
-    <el-dialog class="plan-eff-dialog" title="进货" :visible.sync="addSellList" width="70%" center>
+    <!-- 修改弹出框 -->
+    <el-dialog class="plan-eff-dialog" title="修改" :visible.sync="updataSell" width="70%" center>
       <template>
         <el-row>
           <el-col :span="12">
-            <span class="ordsum">药品名称：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span style="font-weight:bold;">
-              <el-select v-model="productId" placeholder="请选择" style="width:70%;">
-                <el-option
-                  v-for="item in options"
-                  :key="item.productId"
-                  :label="item.name"
-                  :value="item.productId">
-                </el-option>
-              </el-select>
-            </span>
+            <span class="ordsum">编号：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span style="font-weight:bold;"><el-input  style="width:70%;" :disabled="true" v-model="productId"></el-input></span>
           </el-col>
           <el-col :span="12">
-            <span class="ordsum">数量（库存）&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span style="font-weight:bold;"><el-input  style="width:70%;" type="number" v-model="stock"></el-input></span>
+            <span class="ordsum">名称：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span style="font-weight:bold;">
+              <el-input  style="width:70%;" :disabled="true" v-model="name"></el-input>
+            </span>
           </el-col>
         </el-row>
         <el-row style="margin-top: 20px">
           <el-col :span="12">
-            <span class="ordsum">进价（元）&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span class="ordsum">数量（库存）：</span>
+            <span style="font-weight:bold;"><el-input  style="width:70%;" type="number" v-model="stock"></el-input></span>
+          </el-col>
+          <el-col :span="12">
+            <span class="ordsum">进价（分）：&nbsp;&nbsp;&nbsp;</span>
             <span style="font-weight:bold;"><el-input  style="width:70%;" type="number" v-model="purchasePrice"></el-input></span>
           </el-col>
+        </el-row>
+        <el-row style="margin-top: 20px">
           <el-col :span="12">
             <span class="ordsum">计量单位：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <span style="font-weight:bold;">
                <el-select v-model="unit" placeholder="请选择" style="width: 70%;">
-                  <el-option label="盒" value="包"></el-option>
+                  <el-option label="盒" value="盒"></el-option>
                 </el-select>
             </span>
           </el-col>
-        </el-row>
-        <el-row style="margin-top: 20px">
           <el-col :span="12">
-            <span class="ordsum">售价（元）&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span class="ordsum">售价（分）：&nbsp;&nbsp;&nbsp;</span>
             <span style="font-weight:bold;"><el-input  style="width:70%;" type="number" v-model="price"></el-input></span>
           </el-col>
+        </el-row>
+
+        <el-row style="margin-top: 20px">
           <el-col :span="12">
             <span class="ordsum">最小销售单位：</span>
             <span style="font-weight:bold;">
@@ -105,24 +105,21 @@
                 <el-option label="包" value="包"></el-option>
                 <el-option label="粒" value="粒"></el-option>
                 <el-option label="克" value="克"></el-option>
+                <el-option label="支" value="支"></el-option>
               </el-select>
             </span>
           </el-col>
-
-        </el-row>
-
-        <el-row style="margin-top: 20px">
           <el-col :span="12">
             <span class="ordsum">最小销售单位存量：</span>
             <span style="font-weight:bold;"><el-input  style="width:63%;" type="number" v-model="minUnitStock"></el-input></span>
           </el-col>
-          <el-col :span="12">
-            <span class="ordsum">最小销售价格：</span>
-            <span style="font-weight:bold;"><el-input  style="width:70%;" type="number" v-model="minPrice"></el-input></span>
-          </el-col>
 
         </el-row>
         <el-row style="margin-top: 20px">
+          <el-col :span="12">
+            <span class="ordsum">最小销售价格（分）：</span>
+            <span style="font-weight:bold;"><el-input  style="width:60%;" type="number" v-model="minPrice"></el-input></span>
+          </el-col>
           <el-col :span="12">
             <span class="ordsum">进货时间：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <span style="font-weight:bold;">
@@ -130,24 +127,21 @@
               </el-date-picker>
             </span>
           </el-col>
+        </el-row>
+        <el-row style="margin-top: 20px;">
           <el-col :span="12">
             <span class="ordsum">进货商：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <span style="font-weight:bold;"><el-input  style="width:70%;"  v-model="purchaser"></el-input></span>
           </el-col>
-        </el-row>
-        <el-row style="margin-top: 20px;">
           <el-col :span="12">
             <span class="ordsum">进货商电话：&nbsp;&nbsp;&nbsp;</span>
             <span style="font-weight:bold;"><el-input  style="width:70%;" type="number" v-model="purchaserPhone"></el-input></span>
           </el-col>
-          <el-col :span="12">
-            <el-button type="primary" @click="addSell" style="margin-left: 50%">确 定</el-button>
-          </el-col>
         </el-row>
 
-        <!--<span slot="footer" class="dialog-footer">-->
-          <!--<el-button type="primary" @click="">确 定</el-button>-->
-        <!--</span>-->
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="sumbit">确 定</el-button>
+        </span>
       </template>
     </el-dialog>
   </div>
@@ -173,7 +167,7 @@
         data() {
             return {
               list:[],
-              addSellList:false,
+              updataSell:false,
               data1:'',
               total:'',
               currentPage:1,
@@ -182,6 +176,7 @@
               drugsType:'',
               options:[],
               productId:'',
+              name:'',
               stock:'',
               purchasePrice:'',
               price:'',
@@ -205,19 +200,6 @@
           this.data1='';
           this.getList();
         },
-        clear(){
-          this.productId="";
-           this.stock="";
-            this.purchasePrice="";
-            this.price="";
-            this.unit="";
-            this.minPrice="";
-            this.minUnit="";
-            this.minUnitStock="";
-            this.stockDate="";
-            this.purchaser="";
-            this.purchaserPhone="";
-        },
         handleSizeChange(val) {
           this.size = val;
           console.log(val);
@@ -233,81 +215,44 @@
           return time.getTime() > Date.now();
           console.log(data);
         },
-        addSell(){
-          if (this.productId=="") {
-            Message({
-              showClose: true,
-              message: "请选择药品名称!" ,
-              type: "error"
-            });
-          }else if (this.stock=="") {
-            Message({
-              showClose: true,
-              message: "请输入数量（存量）!" ,
-              type: "error"
-            });
-          }else if (this.purchasePrice=="") {
-            Message({
-              showClose: true,
-              message: "请输入进价!" ,
-              type: "error"
-            });
-          }else if (this.price=="") {
-            Message({
-              showClose: true,
-              message: "请输入售价!" ,
-              type: "error"
-            });
-          }else if (this.unit=="") {
-            Message({
-              showClose: true,
-              message: "请输入计量单位!" ,
-              type: "error"
-            });
-          }else if (this.minPrice=="") {
-            Message({
-              showClose: true,
-              message: "请输入最小销售价格" ,
-              type: "error"
-            });
-          }else if (this.minUnit=="") {
-            Message({
-              showClose: true,
-              message: "请选择最小销售单位!" ,
-              type: "error"
-            });
-          }else if (this.minUnitStock=="") {
-            Message({
-              showClose: true,
-              message: "请输入最小销售单位存量!" ,
-              type: "error"
-            });
-          }else if (this.stockDate=="") {
-            Message({
-              showClose: true,
-              message: "请选择进货时间!" ,
-              type: "error"
-            });
-          }else if (this.purchaser=="") {
-            Message({
-              showClose: true,
-              message: "请输入采购商" ,
-              type: "error"
-            });
-          }else if (this.purchaserPhone=="") {
-            Message({
-              showClose: true,
-              message: "请输入采购商电话!" ,
-              type: "error"
-            });
-          }else {
+        handleClick(index){
+          var productId = index;
+          console.log(productId);
+          axios.get("http://localhost:8087/sell/"+ productId)
+            .then((response) => {
+              const resDate = response.data;
+              if (resDate.code == '0') {
+                this.productId=resDate.data.productId;
+                this.name=resDate.data.name;
+                this.stock=resDate.data.stock;
+                this.purchasePrice=resDate.data.purchasePrice;
+                this.price=resDate.data.price;
+                this.unit=resDate.data.unit;
+                this.minPrice=resDate.data.minPrice;
+                this.minUnit=resDate.data.minUnit;
+                this.minUnitStock=resDate.data.minUnitStock;
+                this.stockDate=resDate.data.stockDate;
+                this.purchaser=resDate.data.purchaser;
+                this.purchaserPhone=resDate.data.purchaserPhone;
+              } else {
+                this.$message({
+                  showClose: true,
+                  message: "失败：" + resDate.data,
+                  type: 'error'
+                });
+              }
+            })
+          this.updataSell=true;
+        },
+        sumbit(){
             var _this = this;
             var purchasePrice=parseInt(_this.purchasePrice);
             var price=parseInt(_this.price);
             var minPrice=parseInt(_this.minPrice);
             var stock=parseInt(_this.stock);
-            axios.post("http://localhost:8087/product", {
+            axios.put("http://localhost:8087/sell", {
               productId: _this.productId,
+              name:_this.name,
               stock: stock,
               purchasePrice: purchasePrice,
               price: price,
@@ -323,11 +268,11 @@
               if (res.data.code == 0) {
                 Message({
                   showClose: true,
-                  message: "添加成功:",
+                  message: "修改成功:",
                   type: "success"
                 });
-                _this.addSellList=false;
-                _this.clear();
+                _this.updataSell=false;
+                _this.getList();
               } else {
                 Message({
                   showClose: true,
@@ -336,7 +281,6 @@
                 });
               }
             });
-          }
         },
         getList(){
           let _this = this;

@@ -40,6 +40,10 @@
     <el-dialog class="plan-eff-dialog" title="修改" :visible.sync="updateEquipment" width="40%" style="padding: 0% 10%"center>
       <template>
         <div>
+          <span class="ordsum">医疗器材编号：</span>
+          <span style="font-weight:bold;"><el-input  style="width:70%;" :disabled="true" v-model="productId"></el-input></span>
+        </div>
+        <div style="margin-top: 2%">
           <span class="ordsum">医疗器材名称：</span>
           <span style="font-weight:bold;"><el-input  style="width:70%;"  v-model="name"></el-input></span>
         </div>
@@ -56,7 +60,7 @@
           <span style="font-weight:bold;"><el-input  style="width:70%;" :disabled="true" v-model="type"></el-input></span>
         </div>
         <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+          <el-button type="primary" @click="onUpdata">确 定</el-button>
         </span>
       </template>
     </el-dialog>
@@ -73,7 +77,13 @@
               total:'',
               currentPage:1,
               size: 10,
-              updateEquipment:false
+              updateEquipment:false,
+              productId:'',
+              name:'',
+              brand:'',
+              origin:'',
+              type:'',
+
             }
         },
       created:function() {
@@ -131,8 +141,62 @@
               _this.getList();
             })
         },
-        updataME(){
+        updataME(index){
+          var productId = index;
+          console.log(productId);
+          axios.get("http://localhost:8087/product/"+ productId)
+            .then((response) => {
+              const resDate = response.data;
+              if (resDate.code == '0') {
+                this.productId=resDate.data.productId;
+                this.name=resDate.data.name;
+                this.brand=resDate.data.brand;
+                this.origin=resDate.data.origin;
+                // this.type=resDate.data.type;
+                var type=resDate.data.type;
+                if(type=="1"){
+                  this.type="药品"
+                }else if(type=="2"){
+                  this.type="保健品"
+                }
+                else if(type=="3"){
+                  this.type="医疗器材"
+                }
+              } else {
+                this.$message({
+                  showClose: true,
+                  message: "失败：" + resDate.data,
+                  type: 'error'
+                });
+              }
+            })
           this.updateEquipment=true;
+        },
+        onUpdata(){
+          var _this=this;
+          axios.put("http://localhost:8087/product",{
+            productId:_this.productId,
+            name: _this.name,
+            brand: _this.brand,
+            origin: _this.origin,
+            type: "3",//3表示医疗器材
+          }).then(function(res){
+            if (res.data.code == 0) {
+              Message({
+                showClose: true,
+                message: "修改成功",
+                type: "success"
+              });
+              _this.updateEquipment=false;
+              _this.getList();
+            } else {
+              Message({
+                showClose: true,
+                message: "失败:" + res.data.data,
+                type: "error"
+              });
+            }
+          });
         },
         getList(){
           var _this=this;

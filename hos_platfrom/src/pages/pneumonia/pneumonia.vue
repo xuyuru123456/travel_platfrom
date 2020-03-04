@@ -64,11 +64,13 @@
       <div>
         <span class="ordsum">地区：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
         <span style="font-weight:bold;">
-          <el-select v-model="province" placeholder="请选择" style="width: 70%;">
-            <el-option label="福州市" value="福州市"></el-option>
-            <el-option label="厦门市" value="厦门市"></el-option>
-            <el-option label="泉州市" value="泉州市"></el-option>
-            <el-option label="三明市" value="三明市"></el-option>
+          <el-select v-model="area" placeholder="请选择" style="width: 70%;">
+            <el-option
+              v-for="(item,index) in options"
+              :key="index"
+              :label="item.city"
+              :value="index">
+        </el-option>
           </el-select>
         </span>
       </div>
@@ -95,10 +97,14 @@
          <!--</span>-->
       <!--</div>-->
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="add">提交</el-button>
+        <el-button type="primary" @click="addP">提交</el-button>
       </div>
     </el-dialog>
     <el-dialog class="plan-eff-dialog" title="修改" :visible.sync="updataInfo" width="30%" center>
+      <div style="padding-top: 10px;">
+        <span class="ordsum">编号：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <span style="font-weight:bold;"><el-input  :disabled="true" style="width:70%;" v-model="epidemicId1"></el-input></span>
+      </div>
       <div style="padding-top: 10px;">
         <span class="ordsum">地区：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
         <span style="font-weight:bold;"><el-input  :disabled="true" style="width:70%;" v-model="location1"></el-input></span>
@@ -157,18 +163,54 @@
               size: 10,
               addInfo:false,
               updataInfo:false,
-              province:'',
+              area:'',
+              // province:'',
               confirmed:'',
               suspected:'',
               death:'',
               cured:'',
               data:'',
+              epidemicId:'',
+              epidemicId1:'',
+
+              location1:'',
               province1:'',
               confirmed1:'',
               suspected1:'',
               death1:'',
               cured1:'',
-              data1:''
+              data1:'',
+              options:[{
+                areaNumber:'350000',
+                city:'福建省'
+              },{
+                areaNumber:'350100',
+                city:'福州市'
+              },{
+                areaNumber:'350200',
+                city:'厦门市'
+              },{
+                areaNumber:'350300',
+                city:'莆田市'
+              },{
+                areaNumber:'350400',
+                city:'三明市'
+              },{
+                areaNumber:'350500',
+                city:'泉州市'
+              },{
+                areaNumber:'350600',
+                city:'漳州市'
+              },{
+                areaNumber:'350700',
+                city:'南平市'
+              },{
+                areaNumber:'350800',
+                city:'龙岩市'
+              },{
+                areaNumber:'350900',
+                city:'宁德市'
+              }]
             }
         },
       created:function() {
@@ -176,7 +218,7 @@
       },
       methods:{
           clear(){
-            this.province="";
+            this.area="";
             this.confirmed="";
             this.suspected="";
             this.death="";
@@ -193,12 +235,13 @@
         showAddInfo(){
           this.addInfo=true;
         },
-        add(){
+        addP(){
           var _this=this;
           let data=dateFormat();
-
           axios.post("http://localhost:8087/epidemic",{
-            province:_this.province,
+            province:_this.options[this.area].city,
+            areaNumber:_this.options[this.area].areaNumber,
+            higherAreaNumber:'350000',
             // date: dateFormat(_this.data),
             data:data,
             confirmed:_this.confirmed,
@@ -224,8 +267,26 @@
             }
           })
         },
-        handleClick(){
+        handleClick(index){
           var _this=this;
+          var epidemicId = index;
+          console.log(epidemicId);
+          axios.get("http://localhost:8087/epidemic/"+ epidemicId)
+            .then((response) => {
+              const resDate = response.data;
+              if (resDate.code == '0') {
+                this.epidemicId=resDate.data.epidemicId;
+                this.name=resDate.data.name;
+                this.brand=resDate.data.brand;
+                this.origin=resDate.data.origin;
+              } else {
+                this.$message({
+                  showClose: true,
+                  message: "失败：" + resDate.data,
+                  type: 'error'
+                });
+              }
+            })
           this.updataInfo=true;
 
         },

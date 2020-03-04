@@ -31,6 +31,7 @@
 </template>
 <script>
   import Message from "element-ui/packages/message/src/main";
+  import api from "../api/Api";
 
   export default {
         data() {
@@ -58,19 +59,23 @@
         handleLogin() {
           var params = new URLSearchParams();
           //alert(2);
-          params.append("account", this.user.account);
+          params.append("userName", this.user.account);
           params.append("password", this.user.pwd);
           //alert(this.user.account);
           //api.requestLogin(params).then(res => res.data)
-          api.requestLogin(params).then(res => {
+          api.requestLogin({
+            userName:this.user.account,
+            password:this.user.pwd
+            // name:"333"
+          }).then(res => {
             //alert(JSON.stringify(data));
             let {code,data, token} = res;
             if (code == '0'){
-              if(this.user.account == 'manager'){
-                sessionStorage.setItem("userRoot", '管理员(经理)');
-              }else{
-                sessionStorage.setItem("userRoot", '普通用户（服务员）');
-              }
+              // if(this.user.account == 'manager'){
+              //   sessionStorage.setItem("userRoot", '管理员(经理)');
+              // }else{
+              //   sessionStorage.setItem("userRoot", '普通用户（服务员）');
+              // }
               sessionStorage.setItem('access-token', token);
               sessionStorage.setItem("LoginName", this.user.account);
               //跳转到后台主界面

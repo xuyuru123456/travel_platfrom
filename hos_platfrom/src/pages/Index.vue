@@ -67,6 +67,7 @@
   export default {
     data(){
       return {
+        time:'',
         activeName: 'first',
         url:require('@/assets/st.png'),
         url1:require('@/assets/sm.jpg'),
@@ -220,9 +221,6 @@
       this.loadTime();
     },
     methods: {
-      go(url){
-        window.location.href=url
-      },
       openWin(url){
         window.open(url,'_blank');
         // window.location.href=url;
@@ -266,7 +264,7 @@
           }else{
             curDateTime = curDateTime +":0"+seconds;
           }
-          // show.innerHTML = curDateTime;
+          show.innerHTML = curDateTime;
         }, 1000);
       }
     }
